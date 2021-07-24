@@ -3,19 +3,30 @@ import pandas as pd
 from database_constants import seasons, team_data_file_path, player_data_file_path
 
 #Combines data from multiple seasons into one dataframe
-
 def combine_data(data):
+    global seasons
     combined=pd.DataFrame()
-    for season in seasons:
-        df=pd.read_csv(rf"{player_data_file_path}\{data}_{season}")
-        df.drop(df.columns[0],1,inplace=True)
-        df["Season"]=season
-        cols=list(df.columns)
-        cols=cols[0:1]+[cols[-1]]+[cols[-2]]+[cols[-3]]+cols[1:-3]
-        df=df[cols]
-        #cols=[x[x.index("_0")+2:]if "_0" in x  else x for x in cols]
-        df.columns=cols
-        combined=pd.concat([combined,df])
+    if data!="expected":
+        for season in seasons:
+            df=pd.read_csv(rf"{player_data_file_path}\{data}_{season}")
+            df.drop(df.columns[0],1,inplace=True)
+            df["Season"]=season
+            cols=list(df.columns)
+            cols=cols[0:1]+[cols[-1]]+[cols[-2]]+[cols[-3]]+cols[1:-3]
+            df=df[cols]
+            df.columns=cols
+            combined=pd.concat([combined,df])
+    else:
+        seasons=seasons[6:]
+        for season in seasons:
+            df=pd.read_csv(rf"{player_data_file_path}\{data}_{season}")
+            df.drop(df.columns[0],1,inplace=True)
+            df["Season"]=season
+            cols=list(df.columns)
+            cols=cols[0:1]+[cols[-1]]+[cols[-2]]+[cols[-3]]+cols[1:-3]
+            df=df[cols]
+            df.columns=cols
+            combined=pd.concat([combined,df])
     return combined
 
 #Creates a dataframe of historical fixtures in the format: short team name vs short opponent name

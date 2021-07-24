@@ -6,7 +6,6 @@ import logging
 
 logging.basicConfig(format='%(process)d-%(levelname)s-%(message)s')
 
-
 # Import all the tables and combine all the seasons for the particular table
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.info("Combining dataframes")
@@ -68,7 +67,7 @@ df = pd.merge(df, opponent_stats[['Season', 'GW ID', 'Opponent',
                                   'MA Opponent Chances ConcededCentre',
                                   'MA Opponent Chances ConcededRight Flank', 'MA Opponent Defensive SlipsLost',
                                   'MA Opponent Defensive SlipsErr', 'MA Opponent Defensive SlipsErr Goal']],
-              how="inner", left_on=["Season", "Gameweek", "Opponent"], right_on=["Season", "GW ID", "Opponent"])
+              how="outer", left_on=["Season", "Gameweek", "Opponent"], right_on=["Season", "GW ID", "Opponent"])
 
 # Same as above but bringing in own team stats
 logging.info("Combining own team stats")
@@ -88,7 +87,7 @@ df = pd.merge(df, team_stats[['Season', 'GW ID', 'Team',
                               'MA Team Chances ConcededLeft Flank',
                               'MA Team Chances ConcededCentre',
                               'MA Team Chances ConcededRight Flank', 'MA Team Defensive SlipsLost',
-                              'MA Team Defensive SlipsErr', 'MA Team Defensive SlipsErr Goal']], how="inner",
+                              'MA Team Defensive SlipsErr', 'MA Team Defensive SlipsErr Goal']], how="outer",
               left_on=["Season", "Gameweek", "Team"], right_on=["Season", "GW ID", "Team"])
 
 # Combining on same names however _y fields represent opponents and _x the player's own team
@@ -283,3 +282,5 @@ df.drop(droplist, inplace=True, axis=1)
 df.to_csv(f"{dataframe_save_path}\Historical data by gameweek.csv",index=False)
 logging.info("Dataframe:")
 print(df.head)
+
+df.info()
