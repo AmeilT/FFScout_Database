@@ -4,10 +4,9 @@
 import numpy as np
 import os
 
-from scraper.scraper_functions import create_team_table_gw
+from scraper.scraper_functions import create_team_table_gw,gameweeklist
 from scraper.scraper_constants import seasons, team_tables, team_stored_path
 
-gameweeklist = list(np.arange(1, 39))
 ffs_tables = [f'{x}_' + str(season) for season in seasons for x in team_tables]
 ffs_df_dict = {}
 for season in seasons:

@@ -1,5 +1,5 @@
 from scraper.scraper_functions import get_historicals_by_gw
-from scraper.scraper_constants import seasons, player_tables, player_stored_path
+from scraper.scraper_constants import seasons, player_tables, player_stored_path,gameweeklist
 import numpy as np
 import os
 
@@ -8,7 +8,6 @@ import logging
 logging.basicConfig(format='%(process)d-%(levelname)s-%(message)s')
 
 logging.info("Scraping Player Data")
-gameweeklist = list(np.arange(1, 39))
 ffs_tables = [f'{x}_' + str(season) for season in seasons for x in player_tables]
 ffs_df_dict = {}
 for season in seasons:

@@ -25,37 +25,35 @@ for table in tables:
         df = pd.merge(left=df, right=add_df[cols_to_use], how="outer", on=["Season", "Gameweek", "Name"])
         print(f"Added {table}")
 
-# For each season and each GW within a season map the home and away teams- do this using the short name
+ # For each season and each GW within a season map the home and away teams- do this using the short name
 logging.info("Create Opponent dataframe")
-
 opponents = create_fixtures()
 
-# Import the separately created form data for each team for each GW in a season
+ # Import the separately created form data for each team for each GW in a season
 logging.info("Importing Opponent Form")
-
 form_df_opponents = create_opponents_form_df()
 
-# Import team level stats
+ # Import team level stats
 logging.info("Importing Team Stats")
 team_stats, opponent_stats = add_opponents_data()
 
-# Merge the main df with form data on the opponents they are playing
+ # Merge the main df with form data on the opponents they are playing
 logging.info("Combining with opponent form data")
 df = pd.merge(df, form_df_opponents[
-    ["Season", "GW ID", "Short Team Name", "Form Measure EWM Points", "Last N games", "Form Measure EWM Points_Opponent",
-     "Last N games_Opponent", "Opponent"]], how='inner',
-              left_on=["Season", "Gameweek", "Team"],
-              right_on=["Season", "GW ID", "Short Team Name"])
+     ["Season", "GW ID", "Short Team Name", "Form Measure EWM Points", "Last N games", "Form Measure EWM Points_Opponent",
+      "Last N games_Opponent", "Opponent"]], how='outer',
+               left_on=["Season", "Gameweek", "Team"],
+               right_on=["Season", "GW ID", "Short Team Name"])
 
-# Then merge with opponents stats. This give us a players stats and opponents stats in one df /
-# for a specific GW in a given season
+ # Then merge with opponents stats. This give us a players stats and opponents stats in one df /
+ # for a specific GW in a given season
 logging.info("Combining with opponent stats")
 df = pd.merge(df, opponent_stats[['Season', 'GW ID', 'Opponent',
-                                  'MA Opponent GoalsTotal',
-                                  'MA Opponent AttemptsTotal', 'MA Opponent AttemptsIn', 'MA Opponent AttemptsBCT',
-                                  'MA Opponent AttemptsSP', 'MA Opponent AttemptsBlkd',
-                                  'MA Opponent AttemptsHit WW', 'MA Opponent AttemptsMins Per Chance',
-                                  'MA Opponent AttemptsOn Target', 'MA Opponent Conversion %Shots',
+                                   'MA Opponent GoalsTotal',
+                                   'MA Opponent AttemptsTotal', 'MA Opponent AttemptsIn', 'MA Opponent AttemptsBCT',
+                                   'MA Opponent AttemptsSP', 'MA Opponent AttemptsBlkd',
+                                   'MA Opponent AttemptsHit WW', 'MA Opponent AttemptsMins Per Chance',
+                                   'MA Opponent AttemptsOn Target', 'MA Opponent Conversion %Shots',
                                   'MA Opponent Conversion %Goals', 'MA Opponent Goals Conceded',
                                   'MA Opponent Clean Sheets', 'MA Opponent Shots ConcededIn',
                                   'MA Opponent Shots ConcededOut', 'MA Opponent Shots ConcededTotal',
