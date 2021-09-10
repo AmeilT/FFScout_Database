@@ -1,15 +1,13 @@
 # import relevant modules
-
 from selenium import webdriver
 import time
 import numpy as np
 import pandas as pd
 from selenium.webdriver.support.ui import Select
-
-from scraper.scraper_constants import user_id, password, chromdriverpath, seasons
-from scraper.scrape_functions import get_result, get_date, home_goals, away_goals, get_GW_ID, form_to_numbers, \
+from scraper.scraper_constants import user_id, password, chromdriverpath
+from scraper.scraper_functions import get_result, get_date, home_goals, away_goals, get_GW_ID, form_to_numbers, \
     number_to_measure, match_points
-
+seasons=[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021]
 username = user_id
 password = password
 
@@ -25,11 +23,9 @@ driver.find_element_by_name("login").click()
 results = pd.DataFrame()
 
 for season in seasons:
-
     select = Select(driver.find_element_by_id('fsid'))
     select.select_by_value(str(season))
     driver.find_element_by_xpath("/html/body/div[1]/div/div[3]/div/div[1]/div[2]/div/div/form/div/input[1]").click()
-
     for i in range(1, 39):
         try:
             table = f"//*[@id='content']/div/div[1]/div[2]/div/table[{i}]"
@@ -62,15 +58,12 @@ form_history = pd.DataFrame()
 
 for season in seasons:
     results_season = results[results["Season"] == season]
-    teams = list(results_season["Home"].unique())
-    teams = teams * results_season["Gameweek ID"].max()
+    unique_teams = np.unique(results_season[['Home', 'Away']])
+    teams = list(unique_teams) * results_season["Gameweek ID"].max()
 
-    # Make a list of Gameweek X * Number of team in the league (20)
-    gameweek_numbers = []
-
-    for i in np.arange(1, results_season["Gameweek ID"].max() + 1):
-        gameweek_numbers.append(i)
-    gameweek_numbers = gameweek_numbers * 20
+    # Make a list of Gameweek X * Number of teams in the league (20)
+    gameweek_numbers = list(np.arange(1, results_season["Gameweek ID"].max() + 1))
+    gameweek_numbers = gameweek_numbers * len(unique_teams)
     gameweek_numbers.sort()
 
     gameweek = []
@@ -111,11 +104,9 @@ for season in seasons:
 
         if outcome == away_team:
             form_table.at[row, column] = "W"
-
         elif outcome == "Draw":
             form_table.at[row, column] = "D"
         else:
-
             form_table.at[row, column] = "L"
 
     # Aggregate form over a 4 week period. The first 3 weeks will just use the longest trackrecord available
