@@ -3809,3 +3809,13 @@ index,Home,Away,Gameweek,Season,Result,Date,Home Goals,Away Goals,Outcome,Gamewe
 7,Burnley,Brighton and Hove Albion,Gameweek 1,2021,1 -  2, 14th Aug 2021,1,2,Brighton and Hove Albion,1
 8,Manchester United,Leeds United,Gameweek 1,2021,5 -  1, 14th Aug 2021,5,1,Manchester United,1
 9,Brentford,Arsenal,Gameweek 1,2021,2 -  0, 13th Aug 2021,2,0,Brentford,1
+0,West Ham United,Leicester City,Gameweek 2,2021,4 -  1, 23rd Aug 2021,4,1,West Ham United,2
+1,Arsenal,Chelsea,Gameweek 2,2021,0 -  2, 22nd Aug 2021,0,2,Chelsea,2
+2,Wolverhampton Wanderers,Tottenham Hotspur,Gameweek 2,2021,0 -  1, 22nd Aug 2021,0,1,Tottenham Hotspur,2
+3,Southampton,Manchester United,Gameweek 2,2021,1 -  1, 22nd Aug 2021,1,1,Draw,2
+4,Brighton and Hove Albion,Watford,Gameweek 2,2021,2 -  0, 21st Aug 2021,2,0,Brighton and Hove Albion,2
+5,Manchester City,Norwich City,Gameweek 2,2021,5 -  0, 21st Aug 2021,5,0,Manchester City,2
+6,Leeds United,Everton,Gameweek 2,2021,2 -  2, 21st Aug 2021,2,2,Draw,2
+7,Crystal Palace,Brentford,Gameweek 2,2021,0 -  0, 21st Aug 2021,0,0,Draw,2
+8,Aston Villa,Newcastle United,Gameweek 2,2021,2 -  0, 21st Aug 2021,2,0,Aston Villa,2
+9,Liverpool,Burnley,Gameweek 2,2021,2 -  0, 21st Aug 2021,2,0,Liverpool,2

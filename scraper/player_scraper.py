@@ -5,17 +5,19 @@ import os
 
 import logging
 
-logging.basicConfig(format='%(process)d-%(levelname)s-%(message)s')
+def player_scraper():
 
-logging.info("Scraping Player Data")
-ffs_tables = [f'{x}_' + str(season) for season in seasons for x in player_tables]
-ffs_df_dict = {}
-for season in seasons:
-    for feature in player_tables:
-        df = get_historicals_by_gw(str(season), gameweeklist, feature)
-        ffs_df_dict[f"{feature}_{season}"] = df
-        print(f"Scraped {feature, season}")
+    logging.basicConfig(format='%(process)d-%(levelname)s-%(message)s')
 
-for table in ffs_tables:
-    output_file_path = os.path.join(player_stored_path, f"{table}")
-    ffs_df_dict[table].to_csv(output_file_path)
+    logging.info("Scraping Player Data")
+    ffs_tables = [f'{x}_' + str(season) for season in seasons for x in player_tables]
+    ffs_df_dict = {}
+    for season in seasons:
+        for feature in player_tables:
+            df = get_historicals_by_gw(str(season), gameweeklist, feature)
+            ffs_df_dict[f"{feature}_{season}"] = df
+            print(f"Scraped {feature, season}")
+
+    for table in ffs_tables:
+        output_file_path = os.path.join(player_stored_path, f"{table}")
+        ffs_df_dict[table].to_csv(output_file_path)

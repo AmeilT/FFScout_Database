@@ -3,8 +3,7 @@ import pandas as pd
 from database_constants import seasons, team_data_file_path, player_data_file_path
 
 #Combines data from multiple seasons into one dataframe
-def combine_data(data):
-    global seasons
+def combine_data(data,seasons):
     combined=pd.DataFrame()
     if data!="expected":
         for season in seasons:
@@ -124,7 +123,7 @@ def add_opponents_data():
     team_stats = pd.merge(teams_attacking, teams_defending, how="inner", on=["Season", "GW ID", "Team"])
     a = [x.replace("_x", "") for x in team_stats.columns]
     team_stats.columns = a
-    team_stats = team_stats[['Season', 'GW ID', 'Team', 'Games Played', 'GoalsTotal', 'AttemptsTotal', 'AttemptsIn',
+    rolling=['Season', 'GW ID', 'Team', 'Games Played', 'GoalsTotal', 'AttemptsTotal', 'AttemptsIn',
                              'AttemptsBCT', 'AttemptsSP', 'AttemptsBlkd', 'AttemptsHit WW',
                              'AttemptsMins Per Chance', 'AttemptsOn Target', 'Conversion %Shots',
                              'Conversion %Goals',
@@ -134,21 +133,18 @@ def add_opponents_data():
                              'Crosses ConcededLeft Flank', 'Crosses ConcededRight Flank',
                              'Chances ConcededLeft Flank', 'Chances ConcededCentre',
                              'Chances ConcededRight Flank', 'Defensive SlipsLost',
-                             'Defensive SlipsErr', 'Defensive SlipsErr Goal']]
+                             'Defensive SlipsErr', 'Defensive SlipsErr Goal']
+    team_stats = team_stats[rolling]
+    team_stats = team_stats.sort_values(["Season", "Team"])
+    rolling_data = team_stats.groupby(["Season", 'Team']).shift(1)[rolling[3:]].rolling(3, min_periods=3).mean()
+    rolling_data.reset_index(inplace=True)
 
-    team_stats = team_stats.groupby(["Season", "Team", "GW ID"]).mean().reset_index()
-    team_stats[['MA Team GoalsTotal', 'MA Team AttemptsTotal', 'MA Team AttemptsIn',
-                'MA Team AttemptsBCT', 'MA Team AttemptsSP', 'MA Team AttemptsBlkd', 'MA Team AttemptsHit WW',
-                'MA Team AttemptsMins Per Chance', 'MA Team AttemptsOn Target', 'MA Team Conversion %Shots',
-                'MA Team Conversion %Goals',
-                'MA Team Goals Conceded', 'MA Team Clean Sheets', 'MA Team Shots ConcededIn',
-                'MA Team Shots ConcededOut', 'MA Team Shots ConcededTotal', 'MA Team Shots ConcededOn Target',
-                'MA Team Shots ConcededHead', 'MA Team Shots ConcededSP', 'MA Team Shots ConcededBC',
-                'MA Team Crosses ConcededLeft Flank', 'MA Team Crosses ConcededRight Flank',
-                'MA Team Chances ConcededLeft Flank', 'MA Team Chances ConcededCentre',
-                'MA Team Chances ConcededRight Flank', 'MA Team Defensive SlipsLost',
-                'MA Team Defensive SlipsErr', 'MA Team Defensive SlipsErr Goal']] = team_stats[
-        team_stats.columns[4:]].rolling(3).mean().shift()
+    team_stats = pd.merge(team_stats, rolling_data[rolling_data.columns[2:]], left_on=team_stats.index,
+                         right_on=rolling_data["index"], suffixes=("", " Team MA"))
+    columns = list(team_stats.columns[1:4]) + sorted(team_stats.columns[5:])
+    team_stats=team_stats[columns]
+
+
     opponent_stats = team_stats.copy()
     opponent_stats.columns = [str(x).replace("Team", "Opponent") for x in opponent_stats.columns]
 

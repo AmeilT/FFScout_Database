@@ -15,7 +15,7 @@ def get_historicals_by_gw(season, gameweeklist, form):
     url = start_url
     driver.get(url)
     driver.find_element_by_id("user_login").send_keys(user_id)
-    driver.find_element_by_id("user_pass").send_keys(password)
+    driver.find_element_by_id("user_pass").send_keys(pw)
     time.sleep(2)
     driver.find_element_by_name("login").click()
 
@@ -101,7 +101,7 @@ def create_team_table_gw(season, gameweeklist, form):
     url = f"https://members.fantasyfootballscout.co.uk/team-stats/{form}/"
     driver.get(url)
     driver.find_element_by_id("user_login").send_keys(f"{user_id}")
-    driver.find_element_by_id("user_pass").send_keys(f"{password}")
+    driver.find_element_by_id("user_pass").send_keys(f"{pw}")
     time.sleep(2)
     driver.find_element_by_name("login").click()
 
@@ -129,6 +129,7 @@ def create_team_table_gw(season, gameweeklist, form):
         tbl = driver.find_element_by_xpath("//*[@id='DataTables_Table_0']").get_attribute('outerHTML')
         df_list = pd.read_html(tbl)
         tablename = df_list[0]
+        #print(season,gw,len(tablename))
         cols = list(map("".join, tablename.columns.values))
         tablename.columns = cols
         tablename = tablename.rename(columns={"Unnamed: 0_level_0Team": "Team",
